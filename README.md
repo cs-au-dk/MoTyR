@@ -2,7 +2,7 @@
 This repository contains the MoTyR (Model-based type regression tester) tool
 for detecting breaking changes in Node.js library updates, as described in the
 2019 FSE _Model-Based Testing of Breaking Changes in Node.js Libraries_ (Link
-will follow later).  See [web-UI/README.md](web-ui/README.md) for a detailed
+will follow later).  See [web-UI](web-UI/README.md) for a detailed
 description of MoTyR.
 
 ## Installation
