@@ -38,7 +38,7 @@ export class BenchmarkCompareViewComponent implements OnInit {
     const routeObs = this.route.paramMap;
 
     const extractName = (key: string) =>
-        key.includes('MoTyR') ? 'MoTyR' : 'NoRegrets';
+        key.includes('NoRegretsPlus') ? 'NoRegretsPlus' : 'NoRegrets';
 
     routeObs.pipe(map((params) => extractName(params.get('firstKey'))))
         .subscribe(this.firstToolName$);

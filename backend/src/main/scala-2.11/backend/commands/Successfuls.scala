@@ -149,8 +149,8 @@ object Successfuls {
     packages: Either[List[PackageAtVersion], Path] = null,
     limit: Int = -1,
     swarm: Boolean = false,
-    //We have both MoTyRMode and IgnoreTagsMode since we want the possibility of not ignoring tags always in MoTyR
-    MoTyRMode: Boolean = false,
+    //We have both NoRegretsPlusMode and IgnoreTagsMode since we want the possibility of not ignoring tags always in NoRegretsPlus
+    NoRegretsPlusMode: Boolean = false,
     ignoreTagsMode: Boolean = false,
     clientPriority: ClientPriority = ClientPriority.OnlyOldest,
     commandCachePolicy: CommandCachePolicy.Value =
@@ -160,7 +160,7 @@ object Successfuls {
     override def toCacheKey = {
       val cacheList = List(
         "successful",
-        if (MoTyRMode) "NoRegrets2" else "",
+        if (NoRegretsPlusMode) "NoRegrets2" else "",
         if (ignoreTagsMode) "IgnoreTags" else "",
         withLibrary,
         atVersion,

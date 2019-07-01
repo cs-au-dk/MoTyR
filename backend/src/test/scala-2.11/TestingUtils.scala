@@ -62,7 +62,7 @@ trait TestingUtils extends TimeLimits {
     checkingCommandCachePolicy: CommandCachePolicy.Value =
       CommandCachePolicy.USE_DATA_IF_PRESENT_REGENERATE_OTHERWISE,
     generateStatistics: Boolean = false,
-    MoTyRMode: Boolean = true,
+    NoRegretsPlusMode: Boolean = true,
     ignoreTagsMode: Boolean = false,
     enableValueChecking: Boolean = false,
     clientPriority: ClientPriority = ClientPriority.OnlyOldest,
@@ -79,7 +79,7 @@ trait TestingUtils extends TimeLimits {
           if (ignoreTagsMode) None else Some(libraryBeginVersion),
           limit = 2000,
           commandCachePolicy = CommandCachePolicy.VERIFY_PRESENCE_OF_DATA,
-          MoTyRMode = MoTyRMode,
+          NoRegretsPlusMode = NoRegretsPlusMode,
           clientPriority = clientPriority))
 
     log.info(s"Dependents retrieved for $libraryName@$libraryBeginVersion")
@@ -91,7 +91,7 @@ trait TestingUtils extends TimeLimits {
           libraryBeginVersion,
           packages = Left(dependents),
           commandCachePolicy = CommandCachePolicy.VERIFY_PRESENCE_OF_DATA,
-          MoTyRMode = MoTyRMode,
+          NoRegretsPlusMode = NoRegretsPlusMode,
           ignoreTagsMode = ignoreTagsMode,
           clientPriority = clientPriority)).handleSuccessfulsCmd()
 
@@ -161,7 +161,7 @@ trait TestingUtils extends TimeLimits {
           doNotRun = doNotRun,
           swarm = swarm,
           learningCommandCachePolicy = learningCommandCachePolicy,
-          MoTyR_Mode = MoTyRMode,
+          NoRegretsPlus_Mode = NoRegretsPlusMode,
           ignoreTagsMode = ignoreTagsMode,
           enableValueChecking = enableValueChecking,
           collectStackTraces = false,

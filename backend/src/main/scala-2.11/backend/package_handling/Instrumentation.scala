@@ -33,7 +33,7 @@ object Instrumentation {
     packageFile: Path,
     depReplacements: List[PackageAtVersion],
     devDepReplacements: List[PackageAtVersion] = List(),
-    //verifyExistenceOfPackageDep is used in MoTyR mode where we ignore tags
+    //verifyExistenceOfPackageDep is used in NoRegretsPlus mode where we ignore tags
     //and therefore may end up with a version of a client not having the required library dependency
     //In that case we throw an exception such that the client is not included in successfuls
     verifyExistenceOfPackageDep: Option[PackageAtVersion] = None): JValue = {

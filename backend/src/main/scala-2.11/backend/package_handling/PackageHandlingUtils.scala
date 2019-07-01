@@ -366,7 +366,7 @@ object PackageHandlingUtils {
                                   library: PackageAtVersion,
                                   clientParentFolder: Path,
                                   deleteDirOnExit: Boolean,
-                                  //See RunTestsOptions for an explanation of the MoTyRMode parameter
+                                  //See RunTestsOptions for an explanation of the NoRegretsPlusMode parameter
                                   ignoreTags: Boolean = false)(
       implicit executor: ProcExecutor): ProcessExecutionResult = {
     val registry = new RegistryReader().loadLazyNpmRegistry()

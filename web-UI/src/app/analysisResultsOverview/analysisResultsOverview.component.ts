@@ -25,7 +25,7 @@ export class AnalysisResultsOverviewComponent {
   hidePrototypes: boolean = true;
   hideClientCoverage: boolean = true;
 
-  MoTyrBenchmark: boolean;
+  NoRegretsPlusBenchmark: boolean;
 
   // false indicates NoRegrets
 
@@ -33,7 +33,7 @@ export class AnalysisResultsOverviewComponent {
               private analysisDataService: AnalysisDataService) {
     this.route.params
         .pipe(
-            tap((p: Params) => {this.MoTyrBenchmark = p.key.includes('MoTyR')}))
+            tap((p: Params) => {this.NoRegretsPlusBenchmark = p.key.includes('NoRegretsPlus')}))
         .subscribe(
             (p: Params) => this.analysisResults$ =
                 analysisDataService.getAnalysisResults(p.key).pipe(
@@ -48,5 +48,5 @@ export class AnalysisResultsOverviewComponent {
                .length != 0;
   }
 
-  getToolName(): string { return this.MoTyrBenchmark ? 'MoTyR' : 'NoRegrets'; }
+  getToolName(): string { return this.NoRegretsPlusBenchmark ? 'NoRegretsPlus' : 'NoRegrets'; }
 }

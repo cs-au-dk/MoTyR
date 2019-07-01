@@ -220,13 +220,13 @@ object Dependents {
     commandCachePolicy: CommandCachePolicy.Value =
       CommandCachePolicy.USE_DATA_IF_PRESENT_REGENERATE_OTHERWISE,
     limit: Int = -1,
-    MoTyRMode: Boolean = true)
+    NoRegretsPlusMode: Boolean = true)
       extends CommandOptions {
 
     override def toCacheKey: List[String] = {
       List(
         "dependents",
-        if (MoTyRMode) "NoRegrets2" else "",
+        if (NoRegretsPlusMode) "NoRegrets2" else "",
         packageName,
         libraryVersion.getOrElse("all"),
         "limit",

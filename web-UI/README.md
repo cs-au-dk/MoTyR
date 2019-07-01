@@ -1,49 +1,49 @@
-The following page describes the architecture of the MoTyR tool presented in the [Model-based Testing of Breaking Changes in Node.js Libraries - FSE 2019](papers/ESECFSE19.pdf) paper. 
+The following page describes the architecture of the NoRegretsPlus tool presented in the [Model-based Testing of Breaking Changes in Node.js Libraries - FSE 2019](papers/ESECFSE19.pdf) paper. 
 
-MoTyR is a tool for automatically identifying breaking changes in Node.js library updates. 
+NoRegretsPlus is a tool for automatically identifying breaking changes in Node.js library updates. 
 It utilizes the test suites of client applications that depend upon the library to construct a model of the library's public API.
-Upon an update of the library, MoTyR can check that the updated library still adheres to the API specification of the API model.
+Upon an update of the library, NoRegretsPlus can check that the updated library still adheres to the API specification of the API model.
 
-In [Section 1](#architecture), we describe MoTyR's architecture comprised of 4 phases, with pointers to the relevant parts of the source code.
-The artifact includes a web-UI, which is documented in [Section 2](#experimental-results-web-UI), for displaying the results of MoTyR and NoRegrets benchmarks.
-This web-UI comes preloaded with the results used in the evaluation of MoTyR. In [Section 3](#interpret-results), we show how to relate the data from the web-UI to the evaluation of the paper.
-Eventually, in [Section 4](#running-benchmarks), we show how to reproduce the results from the paper and how to extend MoTyR with additional benchmarks.
+In [Section 1](#architecture), we describe NoRegretsPlus's architecture comprised of 4 phases, with pointers to the relevant parts of the source code.
+The artifact includes a web-UI, which is documented in [Section 2](#experimental-results-web-UI), for displaying the results of NoRegretsPlus and NoRegrets benchmarks.
+This web-UI comes preloaded with the results used in the evaluation of NoRegretsPlus. In [Section 3](#interpret-results), we show how to relate the data from the web-UI to the evaluation of the paper.
+Eventually, in [Section 4](#running-benchmarks), we show how to reproduce the results from the paper and how to extend NoRegretsPlus with additional benchmarks.
 
 
 <a name="architecture"></a>
 # 1.  Architecture
-MoTyR is divided into 4 phases, the client retrieval phase, the model generation phase, the model processing phase, and the type regression testing phase as illustrated by the figure below.
+NoRegretsPlus is divided into 4 phases, the client retrieval phase, the model generation phase, the model processing phase, and the type regression testing phase as illustrated by the figure below.
 
-MoTyR pipeline:<a name="pipeline"></a>![MoTyR pipeline](http://i65.tinypic.com/15xo5s8.png)
+NoRegretsPlus pipeline:<a name="pipeline"></a>![NoRegretsPlus pipeline](http://i65.tinypic.com/15xo5s8.png)
 
 #### Client Retrieval
-Before MoTyR can generate API models for a library *l*, it must retrieve a suitable set of clients. 
-When MoTyR is first run, it will download and save a copy of the dependency information of all packages in the npm registry (see out/registry &#x2248; 2.8GB) (MoTyR can be forced to download the newest version of the dependency information by deleting out/registry).
+Before NoRegretsPlus can generate API models for a library *l*, it must retrieve a suitable set of clients. 
+When NoRegretsPlus is first run, it will download and save a copy of the dependency information of all packages in the npm registry (see out/registry &#x2248; 2.8GB) (NoRegretsPlus can be forced to download the newest version of the dependency information by deleting out/registry).
 This dependency information is queried for a set of packages that has *l* as a dependency.
-If MoTyR finds more than 2000 suitable clients, then it picks the 2000 packages with the greatest number of stars on npm.
-MoTyR will clone each package and run their test suites filtering any packages that either do not have a test suite, or whose test suites terminate with a non-zero exit code.
-The final set of clients is cached such that this phase does not have to be repeated upon later runs of MoTyR.
+If NoRegretsPlus finds more than 2000 suitable clients, then it picks the 2000 packages with the greatest number of stars on npm.
+NoRegretsPlus will clone each package and run their test suites filtering any packages that either do not have a test suite, or whose test suites terminate with a non-zero exit code.
+The final set of clients is cached such that this phase does not have to be repeated upon later runs of NoRegretsPlus.
 The relevant parts of the implementation are found in [backend/src/main/scala-2.11/backend/commands/Successfuls.scala](backend/src/main/scala-2.11/backend/commands/Successfuls.scala) and [backend/src/main/scala-2.11/backend/commands/Dependents.scala](backend/src/main/scala-2.11/backend/commands/Dependents.scala)
 
 #### Model Generation
-To test for breaking changes in library updates, MoTyR needs to construct a model of the pre-update version of the library's public API.
+To test for breaking changes in library updates, NoRegretsPlus needs to construct a model of the pre-update version of the library's public API.
 A model is generated for each of the clients from the client retrieval phase.
 The exact details of how the model generation works are outlined in Section 4 of the [paper](papers/ESECFSE19.pdf).
 The relevant parts of the implementation are found in [backend/src/main/scala-2.11/backend/commands/RegressionTypeLearner.scala](backend/src/main/scala-2.11/backend/commands/RegressionTypeLearner.scala) 
 
 #### Model Processing
-MoTyR post-processes the generated models to remove duplicate information, such that the type regression testing phase runs faster.
+NoRegretsPlus post-processes the generated models to remove duplicate information, such that the type regression testing phase runs faster.
 The exact details of how this phase works are described in Section 4 of the [paper](papers/ESECFSE19.pdf).
 The implementation is found in [backend/src/main/scala-2.11/backend/regression_typechecking/TreeAPIModel.scala](backend/src/main/scala-2.11/backend/regression_typechecking/TreeAPIModel.scala). Especially, the `compress` method is relevant.
 
 #### Type regression testing
-The final phase of MoTyR uses the models from the model processing phase to check an updated version of the library for type regressions.
+The final phase of NoRegretsPlus uses the models from the model processing phase to check an updated version of the library for type regressions.
 Type regressions represent type-related changes in the public API of the library, and do often indicate breaking changes that may affect client applications.
 This phase is meant to be run as part of the typical modify-test-adjust development loop, giving the developer almost instant feedback about potential breaking changes introduced by the modifications.
 The relevant parts of the implementation are found in [backend/src/main/scala-2.11/backend/commands/RegressionTypeLearner.scala](backend/src/main/scala-2.11/backend/commands/RegressionTypeLearner.scala) and [api-inference/test-runner/src/testRunner.ts](api-inference/test-runner/src/testRunner.ts). 
 
 
-<!-- digraph MoTyR {  -->
+<!-- digraph NoRegretsPlus {  -->
 <!--   "Client Retrieval" [ shape=box];  -->
 <!--   "Model Generation" [ shape=box];  -->
 <!--   "Model Processing" [ shape = box];-->
@@ -73,29 +73,29 @@ The relevant parts of the implementation are found in [backend/src/main/scala-2.
 
 <a name="experimental-results-web-UI"></a>
 # 2.  Experimental results web-UI 
-MoTyR includes a web tool for displaying the results of the experiments.
+NoRegretsPlus includes a web tool for displaying the results of the experiments.
 If you have opened this README.md file manually, then you can start the web-UI by navigating to the `web-UI` folder and run `npm start`.
 Otherwise, you are already in the Web-UI, and you may head to the front page by clicking the _Results_ button in the navigation bar. 
 
 <a name="results-overview"></a>
 #### Results overview
-The results overview (main page of the web-UI) lists results from runs of MoTyR and NoRegrets.
+The results overview (main page of the web-UI) lists results from runs of NoRegretsPlus and NoRegrets.
 It comes preloaded with the results necessary to fill the table from the [paper](papers/ESECFSE19.pdf).
 
 Each entry in the list, marked as *lib@ver*, represents a benchmark of the library *lib* starting at version *ver*.
 Clicking on an entry will bring forward a table with a row for every tool configuration for which the benchmark was run.
 The columns of the table are as follows:
 
-* __Tool__: Either MoTyR or NoRegrets
+* __Tool__: Either NoRegretsPlus or NoRegrets
 * __Major updates__: Total number of major updates of the benchmark
 * __Minor/patch updates__: Total number of minor and patch updates of the benchmark
 * __With coverage__: Coverage information has been recorded when running the tool
-* __With unconstrained clients__: MoTyR's relaxed client option (not available for NoRegrets)
+* __With unconstrained clients__: NoRegretsPlus's relaxed client option (not available for NoRegrets)
 * __Total number of type regressions__: The total number of type regressions recorded across all the updates of the benchmark. _Notice, this number is not necessarily correlated with the number breaking changes (some breaking changes are exposed by many type regressions)._ 
 * __Total clients__: Total number of clients used in the benchmark
 
 There may be multiple entries for each tool.
-In particular, for the benchmarks where NoRegrets finds clients, we include a run of MoTyR where MoTyR uses the same clients as NoRegrets, i.e., __with unconstrained clients__ set to false, such that we can compare the running time of MoTyR and NoRegrets using the exact same set of clients. 
+In particular, for the benchmarks where NoRegrets finds clients, we include a run of NoRegretsPlus where NoRegretsPlus uses the same clients as NoRegrets, i.e., __with unconstrained clients__ set to false, such that we can compare the running time of NoRegretsPlus and NoRegrets using the exact same set of clients. 
 
 
 #### Benchmark results view
@@ -112,11 +112,11 @@ The client details table has a row for each client used in the benchmark.
 The columns of the table are as follows:
 
 * __Client__: Name and version of the client
-* __Tool execution time__: The time it takes for MoTyR to run the type regression testing phase (last phase of [MoTyR pipeline](#pipeline)), or, for NoRegrets benchmarks, the time it takes to generate the API models.
+* __Tool execution time__: The time it takes for NoRegretsPlus to run the type regression testing phase (last phase of [NoRegretsPlus pipeline](#pipeline)), or, for NoRegrets benchmarks, the time it takes to generate the API models.
 * __Model size (paths)__: The model size is the number of paths in π (See the [paper](papers/ESECFSE19.pdf) for a description of π)
 * __Compressed model size__: The size of the model after the compression (The percentage shrunk is in parentheses)
 * __Statement coverage__: The Statement coverage for each library file loaded during the testing (only if __Hide the coverage for individual clients__ is unchecked.)
-* __Model size/Client size__: Shows either the size of the model in bytes for MoTyR clients, or the size of the actual clients code for NoRegrets.
+* __Model size/Client size__: Shows either the size of the model in bytes for NoRegretsPlus clients, or the size of the actual clients code for NoRegrets.
 
 ###### Coverage information
 The coverage information section contains the aggregated coverage across all the clients.
@@ -127,28 +127,28 @@ For example, if client A has covered statement 1 and 2, and client B statement 3
 ###### Type Regressions
 At last, any type regressions found in the update are listed in a table.
 The first column contains the access path on which the regression was observed, the second column contains the violation of type relation, and the third column lists all of the involved clients.
-For NoRegrets the involved clients are the clients for which the model changed in the update in such a way that the type regression was exposed. For MoTyR the involved clients are the clients whose models exposed the type regression when MoTyR ran the type regression testing phase.
+For NoRegrets the involved clients are the clients for which the model changed in the update in such a way that the type regression was exposed. For NoRegretsPlus the involved clients are the clients whose models exposed the type regression when NoRegretsPlus ran the type regression testing phase.
 
-MoTyR and NoRegrets have slightly different models, so the paths look different even when they refer to type regressions exposing the same breaking change. We refer to the [paper](papers/ESECFSE19.pdf) for a more detailed description of the models. 
+NoRegretsPlus and NoRegrets have slightly different models, so the paths look different even when they refer to type regressions exposing the same breaking change. We refer to the [paper](papers/ESECFSE19.pdf) for a more detailed description of the models. 
 
 #### Compare running time
 <a name="compare"></a>
 From the [results overview](#results-overview), it is possible to select two benchmarks for comparison.
 Pick a library, then select two benchmarks by clicking on the rows, and then click the compare button.
-Notice, that it only makes sense to compare benchmarks with the same number of clients, with coverage disabled (measuring coverage is going to slow down both MoTyR and NoRegrets considerably), and with different tools (MoTyR in one configuration and NoRegrets in the other).
+Notice, that it only makes sense to compare benchmarks with the same number of clients, with coverage disabled (measuring coverage is going to slow down both NoRegretsPlus and NoRegrets considerably), and with different tools (NoRegretsPlus in one configuration and NoRegrets in the other).
 This will open a view where every client that is in both benchmarks, and which does not crash in either of the benchmarks, is listed.
-For every client, the running time of the model generation phase (NoRegrets) or the type regression testing phase (MoTyR) is listed, followed by the ratio (fastest/slowest).
+For every client, the running time of the model generation phase (NoRegrets) or the type regression testing phase (NoRegretsPlus) is listed, followed by the ratio (fastest/slowest).
 The average for all the clients is listed in the bottom (this is the number that appears in Table 1 of the [paper](papers/ESECFSE19.pdf)). 
 
 <a name="interpret-results"></a>
 # 3. Interpreting results
 The artifact comes preloaded with the result files from the benchmarks used in the [paper](papers/ESECFSE19.pdf).
-Rerunning all of the benchmarks is going to take several weeks even on a fast computer since MoTyR and NoRegrets have to run on thousands of updates sometimes using hundreds of models or clients.
-In the [Running benchmarks](#running-benchmarks) section, we show how to reproduce all of the results, but we also provide a guide on how to reproduce a smaller subset of the results such that the reader can confirm that MoTyR works as expected within a reasonable amount of time.
-_Notice, if you have already run MoTyR as described in [Section 4](#running-benchmarks), then you may have overwritten some of the preloaded results_
+Rerunning all of the benchmarks is going to take several weeks even on a fast computer since NoRegretsPlus and NoRegrets have to run on thousands of updates sometimes using hundreds of models or clients.
+In the [Running benchmarks](#running-benchmarks) section, we show how to reproduce all of the results, but we also provide a guide on how to reproduce a smaller subset of the results such that the reader can confirm that NoRegretsPlus works as expected within a reasonable amount of time.
+_Notice, if you have already run NoRegretsPlus as described in [Section 4](#running-benchmarks), then you may have overwritten some of the preloaded results_
 
 A couple of bug fixes and some adjustments to the Web-UI have made it necessary to recompute the results since the submission of the paper in February 2019. 
-Therefore there may be some discrepancies between the runtime difference of MoTyR and NoRegrets reported in the paper and the runtime difference shown in the UI. 
+Therefore there may be some discrepancies between the runtime difference of NoRegretsPlus and NoRegrets reported in the paper and the runtime difference shown in the UI. 
 For the benchmarks with many clients, the speed-up ratio remains more or less the same, but for some of the benchmarks with few clients, the ratio has changed substantially.
 For example, _aws-sdk_ went from 6.57x to 13.92x, _mime_ went from 27.19x to 3.85x, and _mysql_ from 11.89x to 166.84x.
 We will change the paper to reflect these changes.
@@ -169,25 +169,25 @@ For libraries with this property, we take the conservative approach of only coun
 We find the breaking changes by manual inspection of the type regressions reported in each minor and patch update.
 Notice, that multiple type regressions may point to the same breaking change, and that the same type regression may be reported by multiple clients, e.g., _debug<span>@<span>2.4.0_.  
 It is a laborious task to understand the root cause of all the type regressions, especially, if you are unfamiliar with the implementation details of the affected library.
-Using a [single client-library test](#single-test), one may gain a deeper understanding of the type regression by attaching a debugger to MoTyR, and then investigating the library state at the point where the type regression is reported.
-MoTyR also contains a [version-diff tool](#version-diff) that may help debug the cause of type-regressions. 
+Using a [single client-library test](#single-test), one may gain a deeper understanding of the type regression by attaching a debugger to NoRegretsPlus, and then investigating the library state at the point where the type regression is reported.
+NoRegretsPlus also contains a [version-diff tool](#version-diff) that may help debug the cause of type-regressions. 
 We encourage interested readers to use these tools to investigate and understand the breaking changes mentioned in the Motivating example and Case studies of the [paper](papers/ESECFSE19.pdf). 
 
 #### Speed-up
-We compute the speed-up ratio by running NoRegrets and MoTyR using the same set of clients, and then compare the running times of MoTyR's type regression testing phase with NoRegrets' model generation phase.
-We use only the clients where both NoRegrets' model generation phase and MoTyR's type regression testing phase terminate successfully without any errors (notice, errors here do not include type-regressions).
+We compute the speed-up ratio by running NoRegrets and NoRegretsPlus using the same set of clients, and then compare the running times of NoRegretsPlus's type regression testing phase with NoRegrets' model generation phase.
+We use only the clients where both NoRegrets' model generation phase and NoRegretsPlus's type regression testing phase terminate successfully without any errors (notice, errors here do not include type-regressions).
 The web-UI tool has a feature for automatically computing this ratio (see [Compare running time](#compare)).
 
 <a name="running-benchmarks"></a>
 # 4. Reproducing paper results
-The evaluation in the [paper](papers/ESECFSE19.pdf) is based on runs of 25 benchmarks, where a benchmark represents a run of MoTyR on a sequence of library updates using models based on the first version in this sequence.
+The evaluation in the [paper](papers/ESECFSE19.pdf) is based on runs of 25 benchmarks, where a benchmark represents a run of NoRegretsPlus on a sequence of library updates using models based on the first version in this sequence.
 For some of the 25 benchmarks, multiple runs with different configurations are necessary to reproduce all of the results.
 For example, for the benchmarks where we compare with the NoRegrets tool, we do the speed comparison with the coverage collection disabled since collecting coverage slows down both tools.
 
 There are two steps required to run a benchmark.
 Say, for example, that the library is _big-integer_, it starts at version _1.0.0_, and we want to test every version between _1.0.0_ and _1.6.4_ (like in the benchmarks of the [paper](papers/ESECFSE19.pdf)).
-First, the client retrieval phase must be run to extract the set of clients that MoTyR will use to generate models.
-Second, the remaining phases of the [MoTyR pipeline](#pipeline) are initiated by a single command, which also automatically feeds the type regression testing phase with all versions of _big-integer_ between _1.0.0_ and _1.6.4_.
+First, the client retrieval phase must be run to extract the set of clients that NoRegretsPlus will use to generate models.
+Second, the remaining phases of the [NoRegretsPlus pipeline](#pipeline) are initiated by a single command, which also automatically feeds the type regression testing phase with all versions of _big-integer_ between _1.0.0_ and _1.6.4_.
 
 The benchmarks are specified in the file [backend/src/test/scala-2.11/TestEntries.scala](backend/src/test/scala-2.11/TestEntries.scala).
 Notice, that this file already contains an entry for each of the benchmarks from the paper.
@@ -201,22 +201,22 @@ For example, the entry below defines a benchmark named top1000-big-integer<span>
 To initiate the client retrieval for this benchmark run:
 
 ```
-sbt -batch "project backend" "test:testOnly FindSuccessfulRegenerateMoTyRWithDependentsRegen -- -z top1000-big-integer@1.0.0"
+sbt -batch "project backend" "test:testOnly FindSuccessfulRegenerateNoRegretsPlusWithDependentsRegen -- -z top1000-big-integer@1.0.0"
 ```
-This command and all the following commands should be run from the root of the motyr project.
+This command and all the following commands should be run from the root of the NoRegretsPlus project.
 Running this command is going to fetch a set of clients and save them in the caching folder.
 Computing the client set is going to take a long time, and requires around 50GB of memory to load the npm registry metadata.
 However, we have already included the set of clients in the cache folder, so this part can be skipped for users lacking sufficient memory. 
 
-Afterward, the remaining phases of MoTyR are started on the benchmark by running
+Afterward, the remaining phases of NoRegretsPlus are started on the benchmark by running
 
 ```
-sbt -batch "project backend" "test:testOnly FullCycleRegenerateMoTyRUnconstrained -- -z top1000-big-integer@1.0.0"
+sbt -batch "project backend" "test:testOnly FullCycleRegenerateNoRegretsPlusUnconstrained -- -z top1000-big-integer@1.0.0"
 ```
 Or alternatively, add `WithCoverage` to the end of the command to also record coverage.
 
 ```
-sbt -batch "project backend" "test:testOnly FullCycleRegenerateMoTyRUnconstrainedWithCoverage -- -z top1000-big-integer@1.0.0"
+sbt -batch "project backend" "test:testOnly FullCycleRegenerateNoRegretsPlusUnconstrainedWithCoverage -- -z top1000-big-integer@1.0.0"
 ```
 These commands should take approximately 15 minutes to run.
 We also recommend running this command on machines with at least 12GB of memory.
@@ -235,17 +235,17 @@ In the evaluation of the paper, we used a machine with 80GB of memory.
 
 <a name="single-test"></a>
 ### Single client/library pair test.
-It is also possible to run MoTyR with only a single client on a single update.
+It is also possible to run NoRegretsPlus with only a single client on a single update.
 This feature is often useful for debugging the root cause of a type regressions after having run a full benchmark.
 
-Single client MoTyR runs are specified in the file [backend/src/test/scala-2.11/Debugging.scala](backend/src/test/scala-2.11/Debugging.scala).
+Single client NoRegretsPlus runs are specified in the file [backend/src/test/scala-2.11/Debugging.scala](backend/src/test/scala-2.11/Debugging.scala).
 For example, to reproduce the type regression from the motivating example in the [paper](papers/ESECFSE19.pdf), add the following entry to the Debugging class:
 
 ```
 "big-integer-against-deposit-iban" should "run" in {
   runEvolution("big-integer@1.4.6", List("1.4.7"), "deposit-iban@1.1.0", { diff =>
     true
-  }, MoTyRMode = true, withCoverage = false)
+  }, NoRegretsPlusMode = true, withCoverage = false)
 }
 ```
 This creates a test _big-integer-against-deposit-iban_, which runs on the update of _big-integer<span>@<span>1.4.6_ to version _1.4.7_ using the client _deposit-iban<span>@<span>1.1.0_.
@@ -256,10 +256,10 @@ The following command runs the test
  sbt -batch "project backend" "test:testOnly Debugging -- -z big-integer-against-deposit-iban"
 ```
 
-If you look at the terminal output, you will see that MoTyR at some point outputs the following line
+If you look at the terminal output, you will see that NoRegretsPlus at some point outputs the following line
 
 ```
-node ./build/test-runner/src/index.js -m /home/motyr/motyr/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0/model.json -n big-integer --libraryVersion 1.4.6 --coverage false -f /home/motyr/motyr/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0 --exactValueChecking false
+node ./build/test-runner/src/index.js -m /home/NoRegretsPlus/NoRegretsPlus/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0/model.json -n big-integer --libraryVersion 1.4.6 --coverage false -f /home/NoRegretsPlus/NoRegretsPlus/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0 --exactValueChecking false
 ```
 This is the command that initiates the model processing.
 Sometimes it is useful to attach a debugger to this phase to better understand the cause of a type regression.
@@ -270,17 +270,17 @@ cd api-inference/test-runner
 ```
 Then repeat the command with the `--inspect-brk` option passed to node
 ```
-node --inspect-brk ./build/test-runner/src/index.js -m /home/motyr/motyr/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0/model.json -n big-integer --libraryVersion 1.4.6 --coverage false -f /home/motyr/motyr/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0 --exactValueChecking false
+node --inspect-brk ./build/test-runner/src/index.js -m /home/NoRegretsPlus/NoRegretsPlus/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0/model.json -n big-integer --libraryVersion 1.4.6 --coverage false -f /home/NoRegretsPlus/NoRegretsPlus/out-type-regression/debugging/big-integer@1.4.6_1.4.7_deposit-iban@1.1.0/_auxClient-deposit-iban@1.1.0 --exactValueChecking false
 ```
 Open chrome and enter `chrome://inspect` in the navigation bar.
 Click the inspect link below Target (v8.10.0), which will open the debugger window.
-It may be helpful to put a breakpoint at the `addTypeRegression` function in the `testResult.ts` file since this will stop MoTyR every time a type regression is encountered.
+It may be helpful to put a breakpoint at the `addTypeRegression` function in the `testResult.ts` file since this will stop NoRegretsPlus every time a type regression is encountered.
 
 
 
 <a name="version-diff"></a>
 #### Version diff
-MoTyR includes a version diff tool that is sometimes useful for debugging the root causes of type regressions.
+NoRegretsPlus includes a version diff tool that is sometimes useful for debugging the root causes of type regressions.
 For example, to compare _big-integer_ version _1.4.6_ with version _1.4.7_ write:
 
 ```

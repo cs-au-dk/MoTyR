@@ -43,7 +43,7 @@ export function compareVersions(a: KeyValueObject<AnalysisResults>,
 
 export function selectedRegressions(regressions: [ AccessPath, TypeDiff ][],
                                     toolName: string) {
-  if (toolName === 'MoTyR') {
+  if (toolName === 'NoRegretsPlus') {
     return regressions;
   } else {
     return regressions.filter(

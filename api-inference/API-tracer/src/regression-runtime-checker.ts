@@ -94,7 +94,7 @@ export class NoRegretsProxyHandler implements ProxyHandler<{}> {
         // If realTargetDesc is none, then the property does not exist on any
         // object in the chain. We therefore report the property as non-existing
         // on the last object in the prototype chain. The reason for doing it
-        // that way, is that MoTyR dispatches the property read all the way
+        // that way, is that NoRegretsPlus dispatches the property read all the way
         // through the prototype chain, when the property is non-existing. So
         // it's most natural have the last object in th chain report the
         // property as non-existing to be most consistent with how NoRegrets

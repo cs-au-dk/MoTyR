@@ -44,7 +44,7 @@ case class RegressionTypeLearner(options: RegressionTypeLearnerOptions) {
     options.libraryVersions.map(PackageAtVersion(options.libraryToCheckName, _))
 
   private val diffK = "diff" :: List(
-    if (options.MoTyR_Mode) "MoTyR" else "NoRegrets",
+    if (options.NoRegretsPlus_Mode) "NoRegretsPlus" else "NoRegrets",
     if (options.ignoreTagsMode) "IgnoreTags" else "",
     if (options.enableValueChecking) "ValueChecking" else "",
     if (options.withCoverage) "WithCoverage" else "",
@@ -151,12 +151,12 @@ case class RegressionTypeLearner(options: RegressionTypeLearnerOptions) {
       totalPathsCovered,
       minorPatchUpdates,
       majorUpdates,
-      if (options.MoTyR_Mode) "MoTyR" else "NoRegrets",
+      if (options.NoRegretsPlus_Mode) "NoRegretsPlus" else "NoRegrets",
       options.withCoverage,
       options.ignoreTagsMode)
 
     BenchmarksStatus.default.addDiff(
-      s"${options.libraryToCheckName}@${options.libraryVersions.head} - ${if (options.MoTyR_Mode) "MoTyR"
+      s"${options.libraryToCheckName}@${options.libraryVersions.head} - ${if (options.NoRegretsPlus_Mode) "NoRegretsPlus"
       else "NoRegrets"}" +
         s"${if (options.ignoreTagsMode) " - IgnoreTags" else ""}" +
         s"${if (options.enableValueChecking) " - ValueChecking" else ""}" +
@@ -625,7 +625,7 @@ case class RegressionTypeLearner(options: RegressionTypeLearnerOptions) {
       s"Regression Type Testing on ${options.libraryToCheckName}@${options.libraryVersions.headOption}")
     log.info(s"Running $ApiTrace with options: ${pprint.stringify(options)}")
 
-    if (options.MoTyR_Mode) {
+    if (options.NoRegretsPlus_Mode) {
       TestDistillationBasedStrategy.run()
     } else {
       ClientTestBasedStrategy.run()
@@ -645,7 +645,7 @@ case class RegressionTypeLearner(options: RegressionTypeLearnerOptions) {
         collectStackTraces = options.collectStackTraces,
         detailedStackTraces = options.detailedStackTraces,
         ignoreFailingInstallations = options.ignoreFailingInstallations,
-        testDistillationMode = options.MoTyR_Mode,
+        testDistillationMode = options.NoRegretsPlus_Mode,
         ignoreTagsMode = options.ignoreTagsMode,
         silent = options.silent,
         coverage = coverage)
@@ -697,7 +697,7 @@ case class RegressionTypeLearner(options: RegressionTypeLearnerOptions) {
     val initLibVersion = libraryVersions.head
 
     log.info(
-      s"Starting MoTyR on ${initLibVersion} -> ${libraryVersions.last} with client ${client}")
+      s"Starting NoRegretsPlus on ${initLibVersion} -> ${libraryVersions.last} with client ${client}")
 
     //We do also include head in testLibraryVersions since it is used by the FilterRegressionsAppearingInInitLibaryVersion option
     val testLibVersions = libraryVersions
@@ -815,7 +815,7 @@ case class RegressionTypeLearner(options: RegressionTypeLearnerOptions) {
     }
 
     Utils.writeToFile(
-      DiskCaching.cacheDir.resolve(s"MoTyRRes-${initLibVersion}-${client}.log"),
+      DiskCaching.cacheDir.resolve(s"NoRegretsPlusRes-${initLibVersion}-${client}.log"),
       log.stopRecord(handle).get.toString(),
       silent = true)
     result
@@ -1001,10 +1001,10 @@ object RegressionResult {
   //Client -> lib -> result
   type NoRegretsResults =
     Map[PackageAtVersion, Map[PackageAtVersion, TracingResult]]
-  type MoTyRResults =
+  type NoRegretsPlusResults =
     Map[PackageAtVersion, Map[PackageAtVersion, TestResult]]
   type ClientResults =
-    Either[NoRegretsResults, MoTyRResults]
+    Either[NoRegretsResults, NoRegretsPlusResults]
 }
 
 case class RegressionResult(diff: Map[PackageAtVersion, RegressionInfo],
@@ -1061,7 +1061,7 @@ case class RegressionTypeLearnerOptions(
   swarm: Boolean = false,
   generateBlacklist: Boolean = true,
   useSmartDiff: Boolean = true,
-  MoTyR_Mode: Boolean = true,
+  NoRegretsPlus_Mode: Boolean = true,
   ignoreTagsMode: Boolean = false,
   enableValueChecking: Boolean = false,
   clientPriority: ClientPriority = ClientPriority.OnlyOldest,

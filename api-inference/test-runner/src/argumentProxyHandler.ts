@@ -341,7 +341,7 @@ export class ArgumentProxyHandler implements ProxyHandler<{}> {
         // What we do at the moment is to just pick the write model values
         // in-order, e.g, if p was written three times by the library when the
         // model was generated and the three writes were assigned ids 1,2 and 3,
-        // then the first time the library writes p in the MoTyR phase we
+        // then the first time the library writes p in the NoRegretsPlus phase we
         // pick the modelValue with id 1, the next time the one with id 2 etc.
         // Notice, this strategy only works as long as we don't try to
         // compress/merge writes. Also, it's a bit uncleary what should be done
@@ -569,7 +569,7 @@ export class ArgumentProxyHandler implements ProxyHandler<{}> {
   private isWhiteListed(actionLabel: Label, readVal: any): boolean {
     // We disregard observations of some properties in the NoRegrets phase (see
     // runtime-hacks.ts). So we should also disregard reads of these properties
-    // in MoTyR.
+    // in NoRegretsPlus.
     return _.some(ArgumentProxyHandler.whitelistedProperties,
                   whiteLab => whiteLab.equals(actionLabel)) ||
            KnownValuesNode.isKnown(readVal) ||

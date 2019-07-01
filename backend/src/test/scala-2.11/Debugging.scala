@@ -11,7 +11,7 @@ abstract class DebuggingBase extends FlatSpec with Matchers {
   private val log = Logger(this.getClass.getSimpleName, Log.Level.Info)
 
   val timeout = 600.minutes
-  protected val onlyMoTyR = false;
+  protected val onlyNoRegretsPlus = false;
 
   implicit val atNotation: (String => PackageAtVersion) =
     NotationalUtils.atNotationToPackage
@@ -25,14 +25,14 @@ abstract class DebuggingBase extends FlatSpec with Matchers {
                    detailedStackTraces: Boolean = false,
                    ignoreFailingInstallations: Boolean = false,
                    smartAugmentation: Boolean = false,
-                   MoTyRMode: Boolean = false,
+                   NoRegretsPlusMode: Boolean = false,
                    silent: Boolean = true,
                    assertOnFailure: Boolean = false,
                    unconstrainedMode: Boolean = false,
                    enableValueChecking: Boolean = false,
                    withCoverage: Boolean = false): Assertion = {
 
-    if (onlyMoTyR && !MoTyRMode) {
+    if (onlyNoRegretsPlus && !NoRegretsPlusMode) {
       assert(true)
     } else {
 
@@ -53,7 +53,7 @@ abstract class DebuggingBase extends FlatSpec with Matchers {
         collectStackTraces = collectStackTraces,
         detailedStackTraces = detailedStackTraces,
         ignoreFailingInstallations = ignoreFailingInstallations,
-        MoTyR_Mode = MoTyRMode,
+        NoRegretsPlus_Mode = NoRegretsPlusMode,
         learningCommandCachePolicy = CommandCachePolicy.REGENERATE_DATA,
         silent = silent,
         enableValueChecking = enableValueChecking,
@@ -93,7 +93,7 @@ abstract class DebuggingBase extends FlatSpec with Matchers {
     runEvolution("big-integer@1.4.6", List("1.4.7"), "deposit-iban@1.1.0", {
       diff =>
         true
-    }, MoTyRMode = true, withCoverage = false)
+    }, NoRegretsPlusMode = true, withCoverage = false)
   }
 }
 

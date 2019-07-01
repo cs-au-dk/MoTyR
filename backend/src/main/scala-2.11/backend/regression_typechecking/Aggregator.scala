@@ -183,7 +183,7 @@ case class AggregateLibraryKnowledge(
 case class ClientDetail(packageAtVersion: PackageAtVersion,
                         succeeded: Boolean,
                         error: String,
-                        //time it took to run the tests of MoTyR (not including model parsing time)
+                        //time it took to run the tests of NoRegretsPlus (not including model parsing time)
                         //Always set to 0 for NoRegrets
                         testTimeMillis: Number,
                         //time it took to execute the full tool

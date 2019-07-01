@@ -259,11 +259,11 @@ export class AnalysisResultsComponent implements OnInit {
   }
 
   clientModelSizeString(): string {
-    return this.toolName === 'MoTyR' ? 'Model size (bytes)' : 'Client size (bytes)';
+    return this.toolName === 'NoRegretsPlus' ? 'Model size (bytes)' : 'Client size (bytes)';
   }
 
   getTime(cd: ClientDetail): number {
-    return this.toolName === 'MoTyR' ? cd.testTimeMillis : cd.executionTimeMillis;
+    return this.toolName === 'NoRegretsPlus' ? cd.testTimeMillis : cd.executionTimeMillis;
   }
 
   public selectedRegressions (regressions: [AccessPath, TypeDiff][]) {

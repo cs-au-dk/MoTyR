@@ -481,7 +481,7 @@ export class AccessPath {
   /**
    * Should be included in path coverage
    * We include pathStrs that are covariant since these are the pathStrs where
-   * MoTyR is responsible for the covearge For contravariant pathStrs, it's
+   * NoRegretsPlus is responsible for the covearge For contravariant pathStrs, it's
    * the library that is responsible for covering the path, which the library is
    * not required to do. For example, if a library stops reading a property on
    * an argument. Similarly, when a path in covariant, but has 2 or more

@@ -68,7 +68,7 @@ object RunTests {
   case class RunTestsOptions(client: PackageAtVersion = null,
                              library: PackageAtVersion = null,
                              clientOutdir: Path = null,
-                             // Config used we can use in MoTyR when we do do not care if client's library dependency constraint satisfies the library version
+                             // Config used we can use in NoRegretsPlus when we do do not care if client's library dependency constraint satisfies the library version
                              ignoreTags: Boolean = false,
                              deleteDirOnExit: Boolean = true)
       extends CommandOptions

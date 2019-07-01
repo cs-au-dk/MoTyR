@@ -5,14 +5,14 @@ import backend.utils.NotationalUtils
 import org.scalatest._
 import org.scalatest.time.SpanSugar._
 
-class FullCycleVerifyMoTyR extends FullCycle {
+class FullCycleVerifyNoRegretsPlus extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
   override val LEARNING_MODE = CommandCachePolicy.VERIFY_PRESENCE_OF_DATA
 }
 
-class FullGenerateMissingMoTyR extends FullCycle {
+class FullGenerateMissingNoRegretsPlus extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -20,7 +20,7 @@ class FullGenerateMissingMoTyR extends FullCycle {
     CommandCachePolicy.USE_DATA_IF_PRESENT_REGENERATE_OTHERWISE
 }
 
-class FullGenerateMissingSwarmMoTyR extends FullCycle with ParallelTestExecution {
+class FullGenerateMissingSwarmNoRegretsPlus extends FullCycle with ParallelTestExecution {
   override val swarm: Boolean = true
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -28,7 +28,7 @@ class FullGenerateMissingSwarmMoTyR extends FullCycle with ParallelTestExecution
     CommandCachePolicy.USE_DATA_IF_PRESENT_REGENERATE_OTHERWISE
 }
 
-class FullRegenerateBenchmarkStatusMoTyR extends FullCycle {
+class FullRegenerateBenchmarkStatusNoRegretsPlus extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = false
   override val neverRun: Boolean = true
@@ -36,14 +36,14 @@ class FullRegenerateBenchmarkStatusMoTyR extends FullCycle {
     CommandCachePolicy.USE_DATA_IF_PRESENT_REGENERATE_OTHERWISE
 }
 
-class FullCycleRegenerateMoTyR extends FullCycle {
+class FullCycleRegenerateNoRegretsPlus extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
   override val LEARNING_MODE = CommandCachePolicy.REGENERATE_DATA
 }
 
-class FullCycleRegenerateMoTyRIgnoreTagsValueChecking extends FullCycle {
+class FullCycleRegenerateNoRegretsPlusIgnoreTagsValueChecking extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -52,7 +52,7 @@ class FullCycleRegenerateMoTyRIgnoreTagsValueChecking extends FullCycle {
   override val ignoreTagsMode = true
 }
 
-class FullCycleRegenerateMoTyRIgnoreTags extends FullCycle {
+class FullCycleRegenerateNoRegretsPlusIgnoreTags extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -60,7 +60,7 @@ class FullCycleRegenerateMoTyRIgnoreTags extends FullCycle {
   override val ignoreTagsMode = true
 }
 
-class FullCycleRegenerateMoTyRUnconstrained extends FullCycle {
+class FullCycleRegenerateNoRegretsPlusUnconstrained extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -69,7 +69,7 @@ class FullCycleRegenerateMoTyRUnconstrained extends FullCycle {
   override val clientPriority = ClientPriority.OnlyNewest
 }
 
-class FullCycleRegenerateMoTyRUnconstrainedWithCoverage extends FullCycle {
+class FullCycleRegenerateNoRegretsPlusUnconstrainedWithCoverage extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -84,7 +84,7 @@ class FullCycleRegenerateNoRegrets extends FullCycle {
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
   override val LEARNING_MODE = CommandCachePolicy.REGENERATE_DATA
-  override val MoTyRMode = false
+  override val NoRegretsPlusMode = false
 }
 
 class FullCycleRegenerateNoRegretsWithCoverage extends FullCycle {
@@ -92,18 +92,18 @@ class FullCycleRegenerateNoRegretsWithCoverage extends FullCycle {
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
   override val LEARNING_MODE = CommandCachePolicy.REGENERATE_DATA
-  override val MoTyRMode = false
+  override val NoRegretsPlusMode = false
   override val withCoverage = true
 }
 
-class FullCycleRegenerateSwarmMoTyR extends FullCycle {
+class FullCycleRegenerateSwarmNoRegretsPlus extends FullCycle {
   override val swarm: Boolean = true
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
   override val LEARNING_MODE = CommandCachePolicy.REGENERATE_DATA
 }
 
-class FullCycleStatisticsMoTyR extends FullCycle {
+class FullCycleStatisticsNoRegretsPlus extends FullCycle {
   override val swarm: Boolean = false
   override val rerunFailed: Boolean = true
   override val neverRun: Boolean = false
@@ -125,7 +125,7 @@ trait FullCycle extends TestEntries {
 
   val generateStatistics = false
 
-  val MoTyRMode = true
+  val NoRegretsPlusMode = true
 
   val ignoreTagsMode = false
 
@@ -152,7 +152,7 @@ trait FullCycle extends TestEntries {
         learningCommandCachePolicy = LEARNING_MODE,
         checkingCommandCachePolicy = CommandCachePolicy.REGENERATE_DATA,
         generateStatistics = generateStatistics,
-        MoTyRMode = MoTyRMode,
+        NoRegretsPlusMode = NoRegretsPlusMode,
         ignoreTagsMode = ignoreTagsMode,
         enableValueChecking = enableValueChecking,
         clientPriority = clientPriority,

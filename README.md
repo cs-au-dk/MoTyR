@@ -1,9 +1,9 @@
-## MoTyR
-This repository contains the MoTyR (Model-based type regression tester) tool
+## NoRegrets
+This repository contains the NoRegrets (Node.js Type Regression Tester) and NoRegrets+ tools
 for detecting breaking changes in Node.js library updates, as described in the
+2018 ECOOP [_Type Regression Testing to Detect Breaking Changes in Node.js Libraries_](https://cs.au.dk/~amoeller/papers/noregrets/paper.pdf) and
 2019 FSE _Model-Based Testing of Breaking Changes in Node.js Libraries_ (Link
-will follow later).  See [web-UI](web-UI/README.md) for a detailed
-description of MoTyR.
+will follow later).  See [web-UI](web-UI/README.md) for a detailed description of NoRegrets.
 
 ## Installation
 Dependencies

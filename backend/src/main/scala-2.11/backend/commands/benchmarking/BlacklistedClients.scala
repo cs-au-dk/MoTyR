@@ -17,8 +17,8 @@ object BlacklistedClients {
       "express-endpoint@2.0.0", // gives variable number of observations, unreliable
       "retell@1.0.0", // tests don't terminate
       "machina@1.0.0", // tests don't terminate
-      "gulp-html-include@0.3.0", //MoTyR uses too much memory
-      "moonlight@0.2.1", //MoTyR uses too much memory
+      "gulp-html-include@0.3.0", //NoRegretsPlus uses too much memory
+      "moonlight@0.2.1", //NoRegretsPlus uses too much memory
       "oils@1.0.0", //Huge memory consumption
       "socket-anti-spam@0.0.8", //Huge memory consumption
       "angular-bridge@0.3.4" //Unhandled promise rejections causes Node to hang.

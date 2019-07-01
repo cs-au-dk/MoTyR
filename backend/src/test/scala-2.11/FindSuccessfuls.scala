@@ -59,35 +59,35 @@ class FindSuccessfulGenerateIfMissingSwarmNoRegrets
   val timeout = 1440.minutes
 }
 
-class FindSuccessfulRegenerateMoTyR extends FindSuccessfuls {
+class FindSuccessfulRegenerateNoRegretsPlus extends FindSuccessfuls {
   override implicit val SUCCESSFUL_MODE =
     CommandCachePolicy.REGENERATE_DATA
   override implicit val swarm = false
   val timeout = 1440.minutes
-  override val MoTyRMode = true
+  override val NoRegretsPlusMode = true
 }
 
-class FindSuccessfulRegenerateMoTyRUnconstrained extends FindSuccessfuls {
+class FindSuccessfulRegenerateNoRegretsPlusUnconstrained extends FindSuccessfuls {
   override implicit val SUCCESSFUL_MODE =
     CommandCachePolicy.REGENERATE_DATA
   override implicit val swarm = false
   val timeout = 1440.minutes
-  override val MoTyRMode = true
+  override val NoRegretsPlusMode = true
   override val ignoreTagsMode = true
   override val clientPriority = ClientPriority.OnlyNewest
 }
 
-class FindSuccessfulRegenerateMoTyRWithDependentsRegen extends FindSuccessfuls {
+class FindSuccessfulRegenerateNoRegretsPlusWithDependentsRegen extends FindSuccessfuls {
   override implicit val SUCCESSFUL_MODE =
     CommandCachePolicy.REGENERATE_DATA
   override implicit val DEPENDENTS_MODE =
     CommandCachePolicy.REGENERATE_DATA
   override implicit val swarm = false
   val timeout = 1440.minutes
-  override val MoTyRMode = true
+  override val NoRegretsPlusMode = true
 }
 
-class FindSuccessfulRegenerateMoTyRWithDependentsRegenUnconstrained
+class FindSuccessfulRegenerateNoRegretsPlusWithDependentsRegenUnconstrained
     extends FindSuccessfuls {
   override implicit val SUCCESSFUL_MODE =
     CommandCachePolicy.REGENERATE_DATA
@@ -95,7 +95,7 @@ class FindSuccessfulRegenerateMoTyRWithDependentsRegenUnconstrained
     CommandCachePolicy.REGENERATE_DATA
   override implicit val swarm = false
   val timeout = 1440.minutes
-  override val MoTyRMode = true
+  override val NoRegretsPlusMode = true
   override val ignoreTagsMode = true
 }
 
@@ -103,7 +103,7 @@ trait FindSuccessfuls extends TestEntries {
   val SUCCESSFUL_MODE: CommandCachePolicy.Value
   val DEPENDENTS_MODE: CommandCachePolicy.Value =
     CommandCachePolicy.USE_DATA_IF_PRESENT_REGENERATE_OTHERWISE
-  val MoTyRMode: Boolean = false
+  val NoRegretsPlusMode: Boolean = false
   val ignoreTagsMode: Boolean = false
   val swarm: Boolean
   val clientPriority: ClientPriority = ClientPriority.OnlyOldest
@@ -119,7 +119,7 @@ trait FindSuccessfuls extends TestEntries {
           if (ignoreTagsMode) None else Some(pv.packageVersion),
           limit = 2000,
           commandCachePolicy = DEPENDENTS_MODE,
-          MoTyRMode = MoTyRMode,
+          NoRegretsPlusMode = NoRegretsPlusMode,
           clientPriority = clientPriority))
 
     Successfuls(
@@ -128,7 +128,7 @@ trait FindSuccessfuls extends TestEntries {
         pv.packageVersion,
         packages = Left(dependents),
         swarm = swarm,
-        MoTyRMode = MoTyRMode,
+        NoRegretsPlusMode = NoRegretsPlusMode,
         ignoreTagsMode = ignoreTagsMode,
         commandCachePolicy = SUCCESSFUL_MODE,
         clientPriority = clientPriority)).handleSuccessfulsCmd()

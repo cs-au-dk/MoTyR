@@ -131,7 +131,7 @@ export class TestRunnerImpl implements TestRunner {
     }
   }
 
-  // Starts the MoTyR testing
+  // Starts the NoRegretsPlus testing
   public runTest(): TestReport {
     const libFolder = this.options.libraryFolder;
 
@@ -274,7 +274,7 @@ export class TestRunnerImpl implements TestRunner {
     this.checker.checkValue(mValue, runtimeValue, report, mValue.path);
 
     // If the value is null or undefined then we skip checks of its properties
-    // since MoTyR will just crash when applying any actions on the value.
+    // since NoRegretsPlus will just crash when applying any actions on the value.
     if (runtimeValue == null) {
       return
     }
